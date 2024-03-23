@@ -41,9 +41,11 @@ function Projects() {
           <Card 
             key={`card_${index}`} 
             title={project.title} 
+            description={project.description}
             location={project.location}
             endDate={project.endDate}
             positions={project.positions}
+            type={project.type}
           />
         ))}
       </Row>
