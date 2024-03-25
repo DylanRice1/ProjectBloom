@@ -32,15 +32,20 @@ const BiodataPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/volunter_user_partdeux');
+    navigate('/volunteer_user_partdeux', { state: { name, phoneNumber } });
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+    if (file && validImageTypes.includes(file.type)) {
       setProfilePic(URL.createObjectURL(file));
+    } else {
+      alert('Only image files are allowed.');
     }
   };
+
 
   const AboutTooltip = () => (
     <div className="group absolute top-0 right-0 p-4">
@@ -71,9 +76,15 @@ const BiodataPage = () => {
 
         <div className="form-wrapper mt-16">
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+          <div className="mb-4">
               <img className="rounded-full w-24 h-24 object-cover mx-auto" src={profilePic} alt="Profile" />
-              <input type="file" id="profile-pic" className="form-input mb-4" onChange={handleImageChange} />
+              <input 
+                type="file" 
+                id="profile-pic" 
+                className="form-input mb-4" 
+                onChange={handleImageChange}
+                accept="image/png, image/jpeg, image/gif" 
+              />
             </div>
             <div className="mb-4">
               <label htmlFor="name" className="label">Name</label>

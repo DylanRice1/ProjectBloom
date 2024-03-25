@@ -10,9 +10,11 @@ const InterestsSkillsPage = () => {
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
-
-  const skillOptions = ['Leadership', 'Communication', 'Technical', 'Management'];
-  const interestOptions = ['Technology', 'Arts', 'Science', 'Sports'];
+  const [otherSkill, setOtherSkill] = useState('');
+  const [otherInterest, setOtherInterest] = useState('');
+  
+  const skillOptions = ['Cleaning', 'Mowing', 'Gardening'];
+  const interestOptions = ['Allotments', 'Gardens', 'Roses'];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,13 +45,47 @@ const InterestsSkillsPage = () => {
     setSelectedInterests(selectedInterests.filter((i) => i !== interest));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Selected Skills:', selectedSkills);
-    console.log('Selected Interests:', selectedInterests);
-    navigate('/next-page'); 
+  
+    
+    const existingData = JSON.parse(sessionStorage.getItem('createAccountData')) || {};
+  
+    const formData = new FormData();
+  
+   
+    formData.append('name', existingData.name);
+    formData.append('phoneNumber', existingData.phoneNumber);
+  
+    
+    if (existingData.location) {
+      formData.append('location', existingData.location);
+    }
+    if (existingData.profilePic) {
+      formData.append('profilePic', existingData.profilePic);
+    }
+  
+    const token = localStorage.getItem('token'); 
+    try {
+      const response = await fetch('https://w20016240.nuwebspace.co.uk/groupwork/testapi/submitFormVol/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        navigate('/success'); 
+      } else {
+        console.error('Submission failed', data);
+      }
+    } catch (error) {
+      console.error('An error occurred', error);
+    }
   };
-
   const slides = [interestImage1, interestImage2, interestImage3];
 
   return (
